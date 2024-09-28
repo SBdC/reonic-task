@@ -1,43 +1,40 @@
-import { useState, useEffect } from 'react'
-
-// Define the type for an individual outlet
-type Outlet = {
-    id: number;
-    status: 'available' | 'occupied';
-    chargingSpeed: number;
-  };
+import { useEffect } from 'react'
+import { Outlet } from '../types/simulation';
+import { useSimulation } from '../provider/useSimulation';
 
 function ChargerOutlets({numberOfOutlets}: {numberOfOutlets: number}) {
-
-    const [outlets, setOutlets] = useState<Outlet[]>([]);
-    const [theoreticalMaximumTotalPower, setTheoreticalMaximumTotalPower] = useState<number>(0)
+    const {
+        chargepointPower,
+        outlets,
+        setOutlets,
+        setTheoreticalMaximumTotalPower,
+        theoreticalMaximumTotalPower
+      } = useSimulation();
 
     useEffect(() => {
-        const newOutlets: Outlet[] =  Array.from({ length: numberOfOutlets }, (_, i) => ({
-          id: i,
-          status: 'available',
-          chargingSpeed: 11,
+        const newOutlets: Outlet[] = Array.from({ length: numberOfOutlets }, (_, i) => ({
+            id: i,
+            power: 11,  // Default power set to 11 kW
+            isOccupied: false
         }));
         setOutlets(newOutlets);
-        setTheoreticalMaximumTotalPower(newOutlets.reduce((acc, outlet) => acc + outlet.chargingSpeed, 0));
-      }, [numberOfOutlets]);
+        setTheoreticalMaximumTotalPower(newOutlets.reduce((acc, outlet) => acc + outlet.power, 0));
+    }, [numberOfOutlets, chargepointPower, setOutlets, setTheoreticalMaximumTotalPower]);
 
-
-  return (
-    <>
+    return (
+        <>
             <p>Theoretical Maximum Total Power: {theoreticalMaximumTotalPower} kW</p>
-    <div className="charger-outlets">
-
-        {outlets.map((outlet) => (
-            <div key={outlet.id}>
-                <p>{outlet.status}</p>
-                <p>{outlet.chargingSpeed}</p>
-            </div>
-        ))}
-  
-    </div>
-    </>
-  )
+            <ul className="charger-outlets">
+                {outlets.map((outlet: Outlet) => (
+                    <li key={outlet.id}>
+                        <p>Outlet ID: {outlet.id}</p>
+                        <p>Chargepoint Power: {chargepointPower} kW</p>
+                        <p>Status: {outlet.isOccupied ? 'Occupied' : 'Available'}</p>
+                    </li>
+                ))}
+            </ul>
+        </>
+    )
 }
 
 export default ChargerOutlets;

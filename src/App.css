@@ -31,9 +31,10 @@
   width: 100%;
   padding: 1rem;
   border-radius: 1rem;  
-  > div {
+  > li {
     border: 1px solid #FFF;
     padding: 1rem;
     border-radius: 1rem;
+    list-style: none;
   }
 }

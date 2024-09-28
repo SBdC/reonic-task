@@ -1,10 +1,14 @@
-export interface Outlet {
+export interface EV {
+    chargingNeed: number;
+    energyCharged: number;
+  }
+  
+  export interface Outlet {
     id: number;
     power: number;  // in kW
-    isOccupied: boolean;
-
+    ev: EV | null;
   }
-
+  
   export interface SimulationContextType {
     numberOfOutlets: number;
     setNumberOfOutlets: (num: number) => void;

@@ -7,7 +7,7 @@ import './App.css'
 function AppContent() {
   const {
     numberOfOutlets, 
-    setNumberOfOutlets
+    setNumberOfOutlets,
   } = useSimulation();
 
   return (

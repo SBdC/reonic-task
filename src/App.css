@@ -1,5 +1,5 @@
 #root {
-  max-width: 1280px;
+  max-width: 1480px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -20,21 +20,62 @@
 
 
 }
-
 .charger-outlets {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  width: 100%;
-  padding: 1rem;
-  border-radius: 1rem;  
-  > li {
+  ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  ul > li {
     border: 1px solid #FFF;
     padding: 1rem;
     border-radius: 1rem;
     list-style: none;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
+
+  ul > li > p {
+    margin: 8px 0;
+  }
+}
+
+.simulation-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-width: 250px;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid #FFF;
+  margin-top: 2rem;
+}
+
+.charger-outlets-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+}
+
+.outlet-id {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  max-height: 32px;
 }

@@ -9,6 +9,7 @@ function AppContent() {
     numberOfOutlets, 
     setNumberOfOutlets
   } = useSimulation();
+
   return (
     <>
       <div className="reonic-logo">

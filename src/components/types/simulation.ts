@@ -14,4 +14,7 @@ export interface Outlet {
     setOutlets: (outlets: Outlet[]) => void;
     theoreticalMaximumTotalPower: number;
     setTheoreticalMaximumTotalPower: (num: number) => void;
+    dailyEnergyConsumed: number;
+    dailyMaxPowerDemand: number;
+    simulateDay: () => void;
   }

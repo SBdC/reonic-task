@@ -8,13 +8,16 @@ function ChargerOutlets({numberOfOutlets}: {numberOfOutlets: number}) {
         outlets,
         setOutlets,
         setTheoreticalMaximumTotalPower,
-        theoreticalMaximumTotalPower
+        theoreticalMaximumTotalPower,
+        dailyEnergyConsumed,
+        dailyMaxPowerDemand,
+        simulateDay
       } = useSimulation();
 
     useEffect(() => {
         const newOutlets: Outlet[] = Array.from({ length: numberOfOutlets }, (_, i) => ({
             id: i,
-            power: 11,  // Default power set to 11 kW
+            power: 11,  // default power set to 11 kW
             isOccupied: false
         }));
         setOutlets(newOutlets);
@@ -23,6 +26,10 @@ function ChargerOutlets({numberOfOutlets}: {numberOfOutlets: number}) {
 
     return (
         <>
+             <p>Theoretical Maximum Total Power: {theoreticalMaximumTotalPower} kW</p>
+            <p>Daily Energy Consumed: {dailyEnergyConsumed.toFixed(2)} kWh</p>
+            <p>Daily Max Power Demand: {dailyMaxPowerDemand.toFixed(2)} kW</p>
+            <button onClick={simulateDay}>Simulate Day</button>
             <p>Theoretical Maximum Total Power: {theoreticalMaximumTotalPower} kW</p>
             <ul className="charger-outlets">
                 {outlets.map((outlet: Outlet) => (

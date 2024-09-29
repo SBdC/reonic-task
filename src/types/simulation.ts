@@ -20,5 +20,9 @@ export interface EV {
     setTheoreticalMaximumTotalPower: (num: number) => void;
     dailyEnergyConsumed: number;
     dailyMaxPowerDemand: number;
+    arrivalProbabilityMultiplier: number;
+    setArrivalProbabilityMultiplier: (num: number) => void;
+    carConsumption: number;
+    setCarConsumption: (num: number) => void;
     simulateDay: () => void;
   }

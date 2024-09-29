@@ -2,14 +2,18 @@ import { Outlet } from '../../types/simulation';
 
 export const simulateDay = (
   outlets: Outlet[],
-  chargepointPower: number
+  chargepointPower: number,
+  arrivalProbabilityMultiplier: number,
+  carConsumption: number
 ): {
   updatedOutlets: Outlet[];
   totalEnergyConsumed: number;
   maxPowerDemand: number;
+  chargingEvents: number;
 } => {
   let totalEnergyConsumed = 0;
   let maxPowerDemand = 0;
+  let chargingEvents = 0;
 
   const updatedOutlets = outlets.map(outlet => ({ ...outlet }));
 
@@ -18,10 +22,12 @@ export const simulateDay = (
 
     updatedOutlets.forEach((outlet, index) => {
       if (!outlet.ev) {
-        // Arrival probability (35-55%)
-        if (Math.random() < (Math.random() * 0.2 + 0.35)) {
-          const chargingNeed = Math.random() * (121 - 18) + 18; // Random between 18 and 121 kW
+        // Adjusted arrival probability (35-55%) * multiplier
+        const baseArrivalProbability = Math.random() * 0.2 + 0.35;
+        if (Math.random() < baseArrivalProbability * arrivalProbabilityMultiplier) {
+          const chargingNeed = Math.random() * (121 - carConsumption) + carConsumption; // Random between carConsumption and 121 kW
           updatedOutlets[index].ev = { chargingNeed, energyCharged: 0 };
+          chargingEvents++;
         }
       }
 
@@ -42,5 +48,5 @@ export const simulateDay = (
     maxPowerDemand = Math.max(maxPowerDemand, currentPowerDemand);
   }
 
-  return { updatedOutlets, totalEnergyConsumed, maxPowerDemand };
+  return { updatedOutlets, totalEnergyConsumed, maxPowerDemand, chargingEvents };
 };

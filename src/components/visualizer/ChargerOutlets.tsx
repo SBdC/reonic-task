@@ -8,6 +8,7 @@ const ChargerOutlets = ({ numberOfOutlets }: { numberOfOutlets: number }) => {
     chargepointPower,
     outlets,
     setOutlets,
+    kWhPer100km,
   } = useSimulation();
 
   useEffect(() => {
@@ -27,6 +28,12 @@ const ChargerOutlets = ({ numberOfOutlets }: { numberOfOutlets: number }) => {
     setOutlets,
    
   ]);
+
+  const getChargingPercentage = (outlet: Outlet) => {
+    if (!outlet.ev) return 0;
+    return (outlet.ev.energyCharged / outlet.ev.chargingNeed) * 100;
+  };
+
 
   return (
     <>
@@ -52,14 +59,11 @@ const ChargerOutlets = ({ numberOfOutlets }: { numberOfOutlets: number }) => {
                 <p>{chargepointPower} kW</p>
 
                 {outlet.ev && (
-                  <p>
-                    {(
-                      (outlet.ev.energyCharged / outlet.ev.chargingNeed) *
-                      100
-                    ).toFixed(2)}
-                    %
-                  </p>
-                )}
+                <>
+                  <p>{getChargingPercentage(outlet).toFixed(2)}%</p>
+                  {/* <p>{(outlet.ev.chargingNeed / kWhPer100km * 100).toFixed(0)} km</p> */}
+                </>
+              )}
               </li>
             ))}
           </ul>

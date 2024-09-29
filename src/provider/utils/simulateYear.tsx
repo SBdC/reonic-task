@@ -30,17 +30,23 @@ export const simulateYear = (
         energyConsumed: daySimulation.totalEnergyConsumed,
         maxPowerDemand: daySimulation.maxPowerDemand,
         chargingEvents: daySimulation.chargingEvents,
-        finalOutletState: daySimulation.updatedOutlets
+        finalOutletState: daySimulation.updatedOutlets,
+        evChargedCount: daySimulation.evChargedCount,
+        averageChargingTime: daySimulation.averageChargingTime
       });
   
       currentOutlets = daySimulation.updatedOutlets;
     }
-    
   
     return { 
       yearlyEnergyConsumed, 
       yearlyMaxPowerDemand, 
       totalChargingEvents, 
-      dailyStats 
+      dailyStats,
+      totalEnergyConsumed: yearlyEnergyConsumed,
+      averageDailyEnergyConsumed: yearlyEnergyConsumed / 365,
+      maxPowerDemand: yearlyMaxPowerDemand,
+      totalEvCharged: dailyStats.reduce((sum, day) => sum + day.evChargedCount, 0),
+      averageChargingTime: dailyStats.reduce((sum, day) => sum + day.averageChargingTime, 0) / dailyStats.length
     };
   };

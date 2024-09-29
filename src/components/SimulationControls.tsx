@@ -18,8 +18,8 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
     setChargepointPower,
     arrivalProbabilityMultiplier,
     setArrivalProbabilityMultiplier,
-    carConsumption,
-    setCarConsumption,
+    kWhPer100km,
+    setKWhPer100km
   } = useSimulation();
 
   return (
@@ -65,8 +65,8 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
           Car Consumption (kW):
           <input
             type="number"
-            value={carConsumption}
-            onChange={(e) => setCarConsumption(Number(e.target.value))}
+            value={kWhPer100km}
+            onChange={(e) => setKWhPer100km(Number(e.target.value))}
             min="1"
           />
         </label>

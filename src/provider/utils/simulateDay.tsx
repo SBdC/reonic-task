@@ -1,12 +1,15 @@
 import { Outlet } from '../../types/simulation';
 import { getConcurrencyFactor } from './getConcurrencyFactor';
+import { getChargingNeed } from './chargingProbabilities';
 
 export const simulateDay = (
   outlets: Outlet[],
   chargepointPower: number,
   concurrencyMultiplier: number,
-  carConsumption: number
+  kWhPer100km: number // Add this parameter
 ): {
+  evChargedCount: number;
+  averageChargingTime: number;
   updatedOutlets: Outlet[];
   totalEnergyConsumed: number;
   maxPowerDemand: number;
@@ -30,7 +33,7 @@ export const simulateDay = (
       const newEVs = targetOccupancy - currentOccupancy;
       updatedOutlets.forEach((outlet, index) => {
         if (!outlet.ev && newEVs > 0) {
-          const chargingNeed = Math.random() * (121 - carConsumption) + carConsumption;
+          const chargingNeed = getChargingNeed(kWhPer100km); // Use the new function here
           updatedOutlets[index].ev = { chargingNeed, energyCharged: 0 };
           chargingEvents++;
         }
@@ -54,5 +57,21 @@ export const simulateDay = (
     maxPowerDemand = Math.max(maxPowerDemand, currentPowerDemand);
   }
 
-  return { updatedOutlets, totalEnergyConsumed, maxPowerDemand, chargingEvents };
+  const evChargedCount = chargingEvents;
+  const totalChargingTime = updatedOutlets.reduce((total, outlet) => {
+    if (outlet.ev) {
+      return total + (outlet.ev.energyCharged / chargepointPower) * 4; // Convert back to hours
+    }
+    return total;
+  }, 0);
+  const averageChargingTime = evChargedCount > 0 ? totalChargingTime / evChargedCount : 0;
+
+  return { 
+    evChargedCount, 
+    averageChargingTime, 
+    updatedOutlets, 
+    totalEnergyConsumed, 
+    maxPowerDemand, 
+    chargingEvents 
+  };
 };

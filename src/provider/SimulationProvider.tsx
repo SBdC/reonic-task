@@ -1,5 +1,5 @@
 import React, { createContext, useState, ReactNode, useCallback } from 'react';
-import { Outlet, SimulationContextType, YearlySimulationResult } from '../types/simulation';
+import { Outlet, SimulationContextType, YearlySimulationResult, DailyStats } from '../types/simulation';
 import { simulateDay } from './utils/simulateDay';
 import { simulateYear } from './utils/simulateYear';
 
@@ -9,10 +9,16 @@ export const SimulationProvider: React.FC<{ children: ReactNode }> = ({ children
     const [numberOfOutlets, setNumberOfOutlets] = useState<number>(20);
     const [chargepointPower, setChargepointPower] = useState<number>(11);
     const [arrivalProbabilityMultiplier, setArrivalProbabilityMultiplier] = useState<number>(1);
-    const [carConsumption, setCarConsumption] = useState<number>(18);
+    const [kWhPer100km, setKWhPer100km] = useState<number>(18);
     const [outlets, setOutlets] = useState<Outlet[]>([]);
-    const [dailyEnergyConsumed, setDailyEnergyConsumed] = useState<number>(0);
-    const [dailyMaxPowerDemand, setDailyMaxPowerDemand] = useState<number>(0);
+    const [dailyStats, setDailyStats] = useState<DailyStats>({
+      energyConsumed: 0,
+      maxPowerDemand: 0,
+      evChargedCount: 0,
+      averageChargingTime: 0,
+      chargingEvents: 0,
+      finalOutletState: []
+    });
     const [yearlySimulationResult, setYearlySimulationResult] = useState<YearlySimulationResult | null>(null);
 
     const runYearlySimulation = useCallback(() => {
@@ -27,12 +33,12 @@ export const SimulationProvider: React.FC<{ children: ReactNode }> = ({ children
           initialOutlets,
           chargepointPower,
           arrivalProbabilityMultiplier,
-          carConsumption
+          kWhPer100km
         );
     
         setYearlySimulationResult(result);
         console.log("Yearly simulation result:", result);
-      }, [numberOfOutlets, chargepointPower, arrivalProbabilityMultiplier, carConsumption]);
+      }, [numberOfOutlets, chargepointPower, arrivalProbabilityMultiplier, kWhPer100km]);
 
 
     const runSimulation = useCallback(() => {
@@ -40,35 +46,48 @@ export const SimulationProvider: React.FC<{ children: ReactNode }> = ({ children
         outlets, 
         chargepointPower, 
         arrivalProbabilityMultiplier, 
-        carConsumption
+        kWhPer100km,
       );
       setOutlets(updatedOutlets);
-      setDailyEnergyConsumed(totalEnergyConsumed);
-      setDailyMaxPowerDemand(maxPowerDemand);
-    }, [outlets, chargepointPower, arrivalProbabilityMultiplier, carConsumption]);
+      setDailyStats({
+        energyConsumed: totalEnergyConsumed,
+        maxPowerDemand,
+        evChargedCount: 0,
+        averageChargingTime: 0,
+        chargingEvents: 0,
+        finalOutletState: updatedOutlets
+      });
+    }, [outlets, chargepointPower, arrivalProbabilityMultiplier, kWhPer100km]);
+  
+    const contextValue: SimulationContextType = {
+      numberOfOutlets,
+      setNumberOfOutlets,
+      chargepointPower,
+      setChargepointPower,
+      kWhPer100km,
+      setKWhPer100km,
+      outlets,
+      setOutlets,
+      dailyEnergyConsumed: dailyStats.energyConsumed,
+      dailyMaxPowerDemand: dailyStats.maxPowerDemand,
+      arrivalProbabilityMultiplier,
+      setArrivalProbabilityMultiplier,
+    
+      simulateDay: runSimulation,
+      dailyStats,
+      setDailyStats,
+      yearlySimulationResult,
+      setYearlySimulationResult,
+      simulateYear: runYearlySimulation,
+      getChargingNeed: function (): number {
+        throw new Error('Function not implemented.');
+      }
+    };
   
     return (
-      <SimulationContext.Provider
-        value={{
-          numberOfOutlets,
-          setNumberOfOutlets,
-          chargepointPower,
-          setChargepointPower,
-          simulateYear: runYearlySimulation,
-          arrivalProbabilityMultiplier,
-          setArrivalProbabilityMultiplier,
-          carConsumption,
-          setCarConsumption,
-          outlets,
-          setOutlets,
-          dailyEnergyConsumed,
-          dailyMaxPowerDemand,
-          simulateDay: runSimulation,
-          runYearlySimulation,
-          yearlySimulationResult,
-        }}
-      >
+      <SimulationContext.Provider value={contextValue}>
         {children}
       </SimulationContext.Provider>
     );
+  
   };

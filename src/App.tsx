@@ -1,13 +1,17 @@
 import reonicLogo from './assets/reonic.svg'
-import ChargerOutlets from './components/ChargerOutlets'
-import { SimulationProvider } from './provider/SimulationProvider';
-import {  useSimulation } from './provider/useSimulation';
+import SimulationControls from './components/SimulationControls'
+import ChargerOutlets from './components/visualizer/ChargerOutlets'
+import DailyStats from './components/visualizer/DailyStats'
+import YearStats from './components/visualizer/YearStats'
+import { SimulationProvider } from './provider/SimulationProvider'
+import { useSimulation } from './provider/useSimulation'
 import './App.css'
 
 function AppContent() {
   const {
     numberOfOutlets, 
-    setNumberOfOutlets,
+    simulateDay,
+    simulateYear,
   } = useSimulation();
 
   return (
@@ -17,8 +21,13 @@ function AppContent() {
           <img src={reonicLogo} className="logo" alt="Reonic logo" />
         </a>
       </div>
-      <input type="number" value={numberOfOutlets} onChange={(e) => setNumberOfOutlets(parseInt(e.target.value))}/>
+   
+      <SimulationControls onSimulate={simulateDay} runYearlySimulation={simulateYear} />
+      <div className='simulation-visualizer'>
       <ChargerOutlets numberOfOutlets={numberOfOutlets}/>
+      <DailyStats />
+      <YearStats />
+      </div>
     </>
   )
 }

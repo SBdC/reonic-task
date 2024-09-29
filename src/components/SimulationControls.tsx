@@ -3,14 +3,15 @@ import { useSimulation } from "../provider/useSimulation";
 
 interface SimulationControlsProps {
   onSimulate: () => void;
+  runYearlySimulation: () => void;
 }
 
 const SimulationControls: React.FC<SimulationControlsProps> = ({
   onSimulate,
+  runYearlySimulation
 }) => {
   const {
-    dailyEnergyConsumed,
-    dailyMaxPowerDemand,
+
     numberOfOutlets,
     setNumberOfOutlets,
     chargepointPower,
@@ -70,9 +71,9 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
           />
         </label>
       </div>
-      <p>Daily Energy Consumed: {dailyEnergyConsumed.toFixed(2)} kWh</p>
-      <p>Daily Max Power Demand: {dailyMaxPowerDemand.toFixed(2)} kW</p>
+
       <button onClick={onSimulate}>Simulate Day</button>
+      <button onClick={runYearlySimulation}>Simulate Year</button>
     </div>
   );
 };

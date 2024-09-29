@@ -1,17 +1,13 @@
 import { useEffect } from "react";
-import { Outlet } from "../types/simulation";
-import { useSimulation } from "../provider/useSimulation";
-import SimulationControls from "./SimulationControls";
-import eletricIcon from "../assets/eletricIcon.svg";
+import { Outlet } from "../../types/simulation";
+import { useSimulation } from "../../provider/useSimulation";
+import eletricIcon from "../../assets/eletricIcon.svg";
 
-function ChargerOutlets({ numberOfOutlets }: { numberOfOutlets: number }) {
+const ChargerOutlets = ({ numberOfOutlets }: { numberOfOutlets: number }) => {
   const {
     chargepointPower,
     outlets,
     setOutlets,
-    setTheoreticalMaximumTotalPower,
-    theoreticalMaximumTotalPower,
-    simulateDay,
   } = useSimulation();
 
   useEffect(() => {
@@ -24,22 +20,19 @@ function ChargerOutlets({ numberOfOutlets }: { numberOfOutlets: number }) {
       })
     );
     setOutlets(newOutlets);
-    setTheoreticalMaximumTotalPower(
-      newOutlets.reduce((acc, outlet) => acc + outlet.power, 0)
-    );
+
   }, [
     numberOfOutlets,
     chargepointPower,
     setOutlets,
-    setTheoreticalMaximumTotalPower,
+   
   ]);
 
   return (
     <>
-      <p>Theoretical Maximum Total Power: {theoreticalMaximumTotalPower} kW</p>
 
       <div className="charger-outlets-container">
-        <SimulationControls onSimulate={simulateDay} />
+      
         <div className="charger-outlets">
           <ul>
             {outlets.map((outlet: Outlet) => (
